@@ -31,7 +31,7 @@
                 <select class="form-select" id="categoria" name="categoria.idCategoria" required>
                     <option value="">Seleccione una categoría</option>
                     <th:block th:each="categoria : ${categorias}">
-                        <option th:value="${categoria.idCategoria}" th:text="${categoria.descripcion}"></option>
+                        <option th:value="${categoria.idCategoria}" th:text="${categoria.nombre}"></option>
                     </th:block>
                 </select>
             </div>
