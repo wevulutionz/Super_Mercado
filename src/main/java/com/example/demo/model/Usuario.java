@@ -18,8 +18,6 @@ public class Usuario {
 
     private String nombreApellidos;
     private String correo;
-    private String clave;
-
     @ManyToOne
     @JoinColumn(name = "idRol")
     private Rol rol;

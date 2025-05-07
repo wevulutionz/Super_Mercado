@@ -28,9 +28,13 @@ public class CProducto {
     public String listarProductos(@RequestParam(value = "nombre", required = false) String nombre,
                                   @RequestParam(value = "categoriaId", required = false) Integer categoriaId,
                                   @RequestParam(value = "proveedorId", required = false) Integer proveedorId,
+                                  @RequestHeader(value="X-Requested-With", required= false) String requestedWith,
                                   Model model) {
         List<Producto> productos = sProducto.buscarProductosConFiltros(nombre, categoriaId, proveedorId);
         model.addAttribute("productos", productos);
+        if ("XMLHttpRequest".equals(requestedWith)) {
+            return "producto/grilla :: grilla";
+        }
         model.addAttribute("categorias", sCategoria.listarCategorias());
         model.addAttribute("proveedores", sProveedor.listarProveedores());
         return "producto/listar";

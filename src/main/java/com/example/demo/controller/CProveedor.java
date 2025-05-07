@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Proveedor;
 import com.example.demo.service.SProveedor;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,22 +17,29 @@ public class CProveedor {
     @Autowired
     private SProveedor sProveedor;
 
+
     @GetMapping("/listar")
-    public String listarProveedores(@RequestParam(value = "nombre", required = false) String nombre, Model model) {
-        if (nombre != null && !nombre.isEmpty()) {
-            model.addAttribute("proveedores", sProveedor.buscarProveedoresPorNombre(nombre));
-        } else {
-            model.addAttribute("proveedores", sProveedor.listarProveedores());
+    public String listarProveedores(
+            @RequestParam(value = "nombre", required = false) String nombre,
+            @RequestHeader(value = "X-Requested-With", required = false) String requestedWith,
+            Model model) {
+
+        List<Proveedor> lista = sProveedor.buscarProveedoresPorNombre(nombre);
+        model.addAttribute("proveedores", lista);
+
+        if ("XMLHttpRequest".equals(requestedWith)) {
+            return "proveedor/grilla :: grilla";
         }
         return "proveedor/ListarBuscar";
     }
+    
     @GetMapping("/crear")
     public String nuevoProveedor(Model model) {
         model.addAttribute("proveedor", new Proveedor());
         return "proveedor/crear";
     }
 
-    @PostMapping("/guardar")
+    @PostMapping("/guardar")	
     public String guardarProveedor(@ModelAttribute Proveedor proveedor) {
         sProveedor.crearProveedor(proveedor);
         return "redirect:/proveedor/listar";

@@ -35,6 +35,9 @@ public class SCategoria {
     }
     
     public List<Categoria> buscarPorNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return rCategoria.findAll();
+        }
         return rCategoria.findByNombreContainingIgnoreCase(nombre);
     }
 }

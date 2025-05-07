@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Categoria;
 import com.example.demo.service.SCategoria;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +18,18 @@ public class CCategoria {
     private SCategoria sCategoria;
 
     @GetMapping("/listar")
-    public String listarCategorias(Model model) {
-        model.addAttribute("categorias", sCategoria.listarCategorias());
+    public String listarCategorias(@RequestParam(value = "nombre", required = false) String nombre,
+                                   @RequestHeader(value = "X-Requested-With", required = false) String requestedWith,
+                                   Model model) {
+        List<Categoria> categorias = sCategoria.buscarPorNombre(nombre);
+        model.addAttribute("categorias", categorias);
+
+        if ("XMLHttpRequest".equals(requestedWith)) {
+            return "categoria/grilla :: grilla";
+        }
         return "categoria/listar";
     }
-
+    
     @GetMapping("/crear")
     public String nuevaCategoria(Model model) {
         model.addAttribute("categoria", new Categoria());
@@ -43,11 +53,5 @@ public class CCategoria {
     public String eliminarCategoria(@PathVariable Integer id) {
         sCategoria.eliminarCategoria(id);
         return "redirect:/categoria/listar";
-    }
-    
-    @GetMapping("/buscar")
-    public String buscarPorNombre(@RequestParam("nombre") String nombre, Model model) {
-        model.addAttribute("categorias", sCategoria.buscarPorNombre(nombre));
-        return "categoria/listar";
     }
 }

@@ -35,6 +35,9 @@ public class SProveedor {
     }
     
     public List<Proveedor> buscarProveedoresPorNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return rProveedor.findAll();
+        }
         return rProveedor.findByNombreContainingIgnoreCase(nombre);
     }
 }
